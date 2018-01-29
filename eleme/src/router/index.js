@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import Index from '@/components/Index'
 import Mine from '@/components/Mine'
 import Login from '@/components/Login'
+import Shop from '@/components/Shop'
 
 Vue.use(Router)
 
@@ -20,10 +21,15 @@ export default new Router({
       name: 'Mine',
       component: Mine
     },
-     {
+    {
       path: '/Login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/Shop',
+      name: 'Shop',
+      component: Shop
     }
   ]
 })
