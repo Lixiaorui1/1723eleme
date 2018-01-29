@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import Index from '@/components/Index'
 import Mine from '@/components/Mine'
 import Login from '@/components/Login'
+import Find from '@/components/Find'
 
 Vue.use(Router)
 
@@ -24,6 +25,11 @@ export default new Router({
       path: '/Login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/Find',
+      name: 'Find',
+      component: Find
     }
   ]
 })
