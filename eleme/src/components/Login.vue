@@ -7,16 +7,16 @@
 				<a >密码登录</a>
 			</div>
 			<div class="formm">
-				<form>
+				<div>
 					<section><input type="text" name="" placeholder="手机号"><button>获取验证码</button></section>
 					<section><input type="text" name="" placeholder="验证码"></section>
 					<section class="tishi">温馨提示：未注册饿了么帐号的手机号，登录时将自动注册，且代表您已同意<a href="javascrip:;"><<用户服务协议>></a></section>
-				</form>
-				<form>
+				</div>
+				<div>
 					<section><input type="text" name="" placeholder="手机号"><button>获取验证码</button></section>
 					<section><input type="text" name="" placeholder="验证码"></section>
 					
-				</form>
+				</div>
 
 			</div>
 			<mt-button type="primary" size="large">登录</mt-button>
