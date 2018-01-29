@@ -74,7 +74,7 @@
 				this.list2 = arr.slice(10);
 			})
 			
-			axios.get("restapi/shopping/v3/restaurants?latitude=39.90469&longitude=116.407173&offset=8&limit=8&extras[]=activities&extras[]=tags&extra_filters=home&rank_id=882f228d03d842f8ad8a869790136601&terminal=h5")
+			axios.get("/restapi/shopping/v3/restaurants?latitude=39.90469&longitude=116.407173&offset=8&limit=8&extras[]=activities&extras[]=tags&extra_filters=home&rank_id=882f228d03d842f8ad8a869790136601&terminal=h5")
 			.then((res)=>{
 				var arr = res.data.items;
 				console.log(arr);
