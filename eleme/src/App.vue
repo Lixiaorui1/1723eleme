@@ -6,6 +6,7 @@
 </template>
 
 <script>
+    import "./assets/js/jquery-1.11.3.js";
 		var rempx = document.documentElement.clientWidth / 6.4;
 		document.getElementsByTagName('html')[0].style.fontSize = rempx + "px";	
 export default {
