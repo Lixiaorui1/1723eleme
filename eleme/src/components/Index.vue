@@ -127,7 +127,7 @@
 	}
 	img{width: 100%;}
 	.swiper{
-		height: 1.77rem;
+		height: 3.2rem;
 	}
 	.swiper_goods ul{
 		width: 20%;
@@ -137,7 +137,7 @@
 		margin-top: 0.1rem;
 	}
 	.swiper_goods ul img{
-		width: 0.9rem;
+		width: 0.8rem;
 	}	
 	.recommend{
 		height: 0.8rem;

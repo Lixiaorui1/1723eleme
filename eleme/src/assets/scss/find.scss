@@ -1,0 +1,19 @@
+#main{
+    display: flex;
+    flex-direction: column;
+    header{
+        height: 0.88rem;
+        background: linear-gradient(90deg,#0af,#0085ff);
+        line-height: 0.88rem;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 900;
+        display: flex;
+        padding: 0 0.2rem;
+        justify-content: space-between;
+    }
+    .content{
+        flex: 1;
+        overflow-y: scroll;
+    }
+}
