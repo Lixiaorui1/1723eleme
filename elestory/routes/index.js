@@ -10,12 +10,16 @@ router.get('/', function(req, res, next) {
 
 // 注册
 router.post('/api/userajax',function (req, res, next) {
+	//console.log(req.body);
+
 	var username = req.body.username;
 	var password = req.body.password;
+	//console.log(username);
 	var result = {
 		code: 1,
 		message: "用户信息保存成功"
 	};
+	console.log(username,password);
 	UserModel.find({username:username},function (err,docs) {
 		if(docs.length > 0) {
 			result.code = -109;

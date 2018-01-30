@@ -5,7 +5,7 @@
 			<div class="mineTop1">
 				<span><img src="../assets/img/t.png"></span>
 				<div>
-				<router-link to="/Login"><p class="minep">登录/注册</p></router-link>	
+				<router-link to="/Login"><p class="minep">{{$store.state.username}}</p></router-link>	
 					<span>登录后享受更多特权</span>
 				</div>
 				<i>></i>

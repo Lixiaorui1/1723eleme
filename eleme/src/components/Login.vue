@@ -14,8 +14,8 @@
 					
 				</div>
 				<div>
-					<section><input type="text" placeholder="手机/邮箱/用户名" id="username"></section>
-					<section><input type="text" placeholder="密码" id="password"></section>
+					<section><input type="text" placeholder="手机/邮箱/用户名" id="username" v-model="username"></section>
+					<section><input type="text" placeholder="密码" id="password" v-model="password"></section>
 					
 				</div>
 
@@ -29,60 +29,55 @@
 	import axios from 'axios'
 	import { MessageBox } from 'mint-ui'
 	import qs from 'qs'
-	var username = $("#username").val();
-	var password = $("#password").val();
+	
 
 	export default{
 		name:'login',
 		data:function () {
 			return{
-				params:{
-					username:username,
-					password:password,		
-				}
+				
+					username:"",
+					password:"",		
+				
 			}
 		},
 		methods:{
 			getCode () {
 				var phone = document.getElementById("phone").value
 				//console.log(phone);
-				// axios.post('/restapi/eus/v3/captchas',{
-				//   	captcha_str:phone
-				//   })
-				//   .then(function (response) {
-				//    //console.log(response.data.captcha_image);
-				//     MessageBox.prompt('请输入验证码').then(({ value, action }) => {
-				//     console.log(value);
+				axios.post('/restapi/eus/v3/captchas',{
+				  	captcha_str:phone
+				  })
+				  .then(function (response) {
+				   //console.log(response.data.captcha_image);
+				    MessageBox.prompt('请输入验证码').then(({ value, action }) => {
+				    console.log(value);
 				   
-				//   });
+				  });
 				 
-				//   });
-
-			 //  	axios.post('/restapi/eus/login/mobile_send_code',{
-				// 	captcha_hash:"",
-				// 	captcha_value:"",
-				// 	mobile:phone
-				// })
-				// .then(function (response) {
-				//    console.log(response);
-				// })
-				// .catch(function (error) {
-				//    console.log(error);
-				// });
-				
+				  });		
 			},
 			login () {
-				
-				// var instance = axios.create({
-				//     headers: {'content-type': 'application/x-www-form-urlencoded'}
-				// });
-				// instance.post('/api/userajax',{
-				
-					
-				// })
-				// .then(function (res) {
-				// 	alert(res)
-				// })
+				var that = this;
+				var instance = axios.create({
+				    headers: {'content-type': 'application/x-www-form-urlencoded'}
+				});
+				instance.post('/api/userajax',qs.stringify({
+					username:this.username,
+					password:this.password
+				}))
+				.then(function (res) {	
+					alert(res.data.message);
+					let username = that.username;
+					if(res.data.code == 1){	
+						console.log(that);
+						//调用vuex中的action
+						that.$store.dispatch('setUserName',username);
+						//跳转页面
+						that.$router.history.push({name:'Mine'});
+					}
+
+				})
 
 			}
 		},
