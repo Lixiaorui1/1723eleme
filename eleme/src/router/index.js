@@ -31,16 +31,31 @@ export default new Router({
       component: Login
     },
     {
-
       path: '/Shop',
       name: 'Shop',
-      component: Shop
+      component: Shop,
+      children : [
+        {
+          path: '/Diancan',
+          name: 'Diancan',
+          component: Diancan
+        },
+        {
+          path: '/Pingjia',
+          name: 'Pingjia',
+          component: Pingjia
+        },
+        {
+          path: '/Shangjia',
+          name: 'Shangjia',
+          component: Shangjia
+        }
+      ]
     },
     {
       path: '/Find',
       name: 'Find',
       component: Find
-
     }
   ]
 })
