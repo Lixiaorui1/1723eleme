@@ -81,7 +81,14 @@
 				console.log(arr);
 				var len = arr.length;
 				for(var i = 0;i < len; i ++){
-					arr[i].restaurants_img = "//fuss10.elemecdn.com/" + arr[i].restaurant.image_path.slice(0,1) + "/" + arr[i].restaurant.image_path.slice(1,3) + "/" + arr[i].restaurant.image_path.slice(3) + ".jpeg?imageMogr/format/webp/thumbnail/!90x90r/gravity/Center/crop/90x90/"
+					var str = "";
+					if(arr[i].restaurant.image_path.indexOf("png") != -1){
+						str = arr[i].restaurant.image_path.slice(arr[i].restaurant.image_path.indexOf("png"))
+					}else{
+						str = arr[i].restaurant.image_path.slice(arr[i].restaurant.image_path.indexOf("jpeg"))
+					}
+					console.log(str)
+					arr[i].restaurants_img = "//fuss10.elemecdn.com/" + arr[i].restaurant.image_path.slice(0,1) + "/" + arr[i].restaurant.image_path.slice(1,3) + "/" + arr[i].restaurant.image_path.slice(3) + "." + str + "?imageMogr/format/webp/thumbnail/!130x130r/gravity/Center/crop/130x130/"
 				}
 				console.log(arr);
 				this.restaurants = arr;
