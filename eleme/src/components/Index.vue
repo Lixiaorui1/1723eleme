@@ -41,8 +41,8 @@
 						<img src="../assets/img/20180128172902.png"/>
 						{{item.restaurant.rating}}&nbsp;&nbsp;月售{{item.restaurant.recent_order_num}}单
 						<p><i>￥0起送 | 配送费￥9</i><em>2.17km | 40分钟</em></p>
-						<p><i>首</i>新用户下单立减17元<em>{{item.restaurant.activities.length}}个活动</em></p>
-						<p><i>减</i><em>{{item.restaurant.activities[1].description}}</em></p>
+						<p v-if="item.restaurant.activities"><i>首</i>新用户下单立减17元<em>{{item.restaurant.activities.length}}个活动</em></p>
+						<p v-if="item.restaurant.activities[1]"><i>减</i><em>{{item.restaurant.activities[1].description}}</em></p>
 					</div>
 				</div>
 			</div>
@@ -76,6 +76,7 @@
 			
 			axios.get("/restapi/shopping/v3/restaurants?latitude=39.90469&longitude=116.407173&offset=8&limit=8&extras[]=activities&extras[]=tags&extra_filters=home&rank_id=882f228d03d842f8ad8a869790136601&terminal=h5")
 			.then((res)=>{
+				console.log(res)
 				var arr = res.data.items;
 				console.log(arr);
 				var len = arr.length;
