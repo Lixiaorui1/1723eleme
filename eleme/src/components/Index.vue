@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div id="box">
 		<div id="top">
 			<p><i><img src="../assets/img/20180128185817.png"/></i>东城区北京市政府</p>
 			<a href="javascript:;"><i><img src="../assets/img/20180128191721.png"/></i>搜索商家、商品名称</a>
@@ -46,6 +46,9 @@
 					</div>
 				</div>
 			</div>
+			<div class="toTop" @click="toTop()">
+				顶部
+			</div>
 		</div>
 	</div>
 </template>
@@ -62,7 +65,30 @@
 				restaurants: []
 			}
 		},
+		methods: {
+			toTop: function(){
+				alert();
+			}
+		},
 		mounted () {
+			var box = document.getElementById("box");
+			var top = document.getElementById("top");
+			var toTop = document.getElementsByClassName("toTop")[0];
+			box.addEventListener('scroll', function(){
+				var scrollTop = box.pageYOffset || box.scrollTop || box.scrollTop
+				console.log(scrollTop);
+				if(scrollTop > 40){
+					top.style.position = "fixed";
+					top.style.top = "-45px";
+					top.style.zIndex = 1;
+					toTop.style.display = "block";
+				}else if(scrollTop <= 40){
+					top.style.position = "relative";
+					top.style.top = "0";
+					toTop.style.display = "none";
+				}
+			})
+			
 			axios.get("/restapi/shopping/openapi/entries?latitude=39.90469&longitude=116.407173&templates[]=main_template&templates[]=favourable_template&templates[]=svip_template")
 			.then((res)=>{
 				var arr = res.data[0].entries;
@@ -204,5 +230,19 @@
 		width: 3rem;
 		line-height: 1.5em;
 		float: left;
+	}
+	.toTop{
+		width: 0.85rem;
+		height: 0.85rem;
+		border-radius: 50%;
+		border: 1px solid #999;
+		line-height: 0.85rem;
+		text-align: center;
+		position: fixed;
+		bottom: 1.6rem;
+		right: 0.5rem;
+		background: #fff;
+		display: none;
+		color: #999999;
 	}
 </style>
