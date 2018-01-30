@@ -28,9 +28,20 @@
 <script>
 	import axios from 'axios'
 	import { MessageBox } from 'mint-ui'
+	import qs from 'qs'
+	var username = $("#username").val();
+	var password = $("#password").val();
 
 	export default{
 		name:'login',
+		data:function () {
+			return{
+				params:{
+					username:username,
+					password:password,		
+				}
+			}
+		},
 		methods:{
 			getCode () {
 				var phone = document.getElementById("phone").value
@@ -61,11 +72,13 @@
 				
 			},
 			login () {
-				var username = $("#username").val();
-				var password = $("#password").val();
-				// axios.post('http://localhost:3000/api/userajax',{
-				// 	username:username,
-				// 	password:password,
+				
+				// var instance = axios.create({
+				//     headers: {'content-type': 'application/x-www-form-urlencoded'}
+				// });
+				// instance.post('/api/userajax',{
+				
+					
 				// })
 				// .then(function (res) {
 				// 	alert(res)
