@@ -6,6 +6,9 @@ import Mine from '@/components/Mine'
 import Login from '@/components/Login'
 
 import Shop from '@/components/Shop'
+import Diancan from '@/components/Diancan'
+import Pingjia from '@/components/Pingjia'
+import Shangjia from '@/components/Shangjia'
 
 import Find from '@/components/Find'
 
@@ -31,16 +34,31 @@ export default new Router({
       component: Login
     },
     {
-
       path: '/Shop',
       name: 'Shop',
-      component: Shop
+      component: Shop,
+      children : [
+        {
+          path: '/Diancan',
+          name: 'Diancan',
+          component: Diancan
+        },
+        {
+          path: '/Pingjia',
+          name: 'Pingjia',
+          component: Pingjia
+        },
+        {
+          path: '/Shangjia',
+          name: 'Shangjia',
+          component: Shangjia
+        }
+      ]
     },
     {
       path: '/Find',
       name: 'Find',
       component: Find
-
     }
   ]
 })

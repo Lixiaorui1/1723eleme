@@ -29,24 +29,12 @@
     </div>
 
     <!-- 选项卡 -->
-    <!-- <div class="x">
-      <mt-navbar v-model="selected">
-        <mt-tab-item id="1">option A</mt-tab-item>
-        <mt-tab-item id="2">option B</mt-tab-item>
-        <mt-tab-item id="3">option C</mt-tab-item>
-      </mt-navbar>
-      <mt-tab-container v-model="selected">
-        <mt-tab-container-item id="1">
-          <mt-cell v-for="n in 10" :title="'content ' + n" />
-        </mt-tab-container-item>
-        <mt-tab-container-item id="2">
-          <mt-cell v-for="n in 4" :title="'content ' + n" />
-        </mt-tab-container-item>
-        <mt-tab-container-item id="3">
-          <mt-cell v-for="n in 6" :title="'content ' + n" />
-        </mt-tab-container-item>
-      </mt-tab-container>
-    </div> -->
+    <div class="tabs">
+      <ul class="nav">
+        <li v-for="(item,index) in tab_li" :class="{selected:flag==index}" @click="chenge_color(index)"><router-link :to="item.link" append>{{item.text}}</router-link></li>
+      </ul>
+      <router-view class="myshop"></router-view>
+    </div>
   </div>
 </template>
 
@@ -57,9 +45,16 @@ document.getElementsByTagName('html')[0].style.fontSize = rempx + "px";
 
 export default {
   name: 'Shop',
-  // data () {
-   
-  // }
+  data () {
+   return{
+    flag:0,
+    tab_li:[
+      {text:"点餐",link:"/Diancan"},
+      {text:"评价",link:"/Pingjia"},
+      {text:"商家",link:"/Shangjia"}
+    ]
+   }
+  },
   mounted () {
     // 使scale 0.5的div居中
     var w = document.getElementsByClassName("shop_info")[0].offsetWidth;
@@ -77,6 +72,7 @@ export default {
 
 .shop_header{
   position: relative;
+  min-height: 3.6rem;
 }
 .header_bg{
   height: 1.16rem;
@@ -180,5 +176,23 @@ export default {
   position: absolute;
   top: 0.32rem;
 /*  right: 0.2rem;*/
+}
+
+
+/* 选项卡 */
+.tabs ul.nav{
+  display: flex;
+  height: 0.72rem;
+  line-height: 0.72rem;
+}
+.tabs ul.nav li{
+  text-align: center;
+  flex: 1;
+  font-size: 0.24rem;
+  color: #666;
+}
+.tabs ul.nav li.selected a{
+  font-weight: bold;
+  color: #333;
 }
 </style>
