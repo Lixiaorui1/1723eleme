@@ -6,6 +6,9 @@ import Mine from '@/components/Mine'
 import Login from '@/components/Login'
 
 import Shop from '@/components/Shop'
+import Diancan from '@/components/Diancan'
+import Pingjia from '@/components/Pingjia'
+import Shangjia from '@/components/Shangjia'
 
 import Find from '@/components/Find'
 
