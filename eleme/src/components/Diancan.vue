@@ -36,6 +36,7 @@
 import axios from 'axios';
 
 export default {
+  props:['id'],
   name: 'Diancan',
   data () {
     return {
@@ -47,17 +48,17 @@ export default {
      
     // },500)
     this.$nextTick(function(){
-       console.log($(".myshop"));
     var oh = $(".myshop").height();
-    console.log(oh);
     $(".order").css("height",oh);
     $(".order .left").css("height",oh);
     $(".order .right").css("height",oh);
-    console.log("shop"+oh);
     })
 
     // ajax
-    axios.get(`/restapi/shopping/v2/menu?restaurant_id=1215108`)
+    var myid = $(".shop").attr("title");
+    console.log(myid);
+
+    axios.get(`/restapi/shopping/v2/menu?restaurant_id=${myid}`)
     .then((res)=>{
       this.menu = res.data;
       console.log(res);

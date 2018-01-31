@@ -1,10 +1,10 @@
 <template>
-  <div class="shop">
+  <div class="shop" :title="id">
 
     <!-- header -->
     <div class="shop_header">
       <div class="header_bg">
-        <i class="iconfont">&#xe61b;</i>
+        <i class="iconfont" @click="gotoIndex()">&#xe61b;</i>
       </div>
       <img class="shop_logo" :src='img_src' />
       <div class="shop_info">            
@@ -31,7 +31,7 @@
     <!-- 选项卡 -->
     <div class="tabs">
       <ul class="nav">
-        <li v-for="(item,index) in tab_li" :class="{selected:flag==index}" @click="chenge_color(index)"><router-link :to="item.link" append>{{item.text}}</router-link></li>
+        <li v-for="(item,index) in tab_li" :class="{selected:flag==index}" @click="chenge_color(index)"><router-link v-if="ajax_flag" :to="{path:item.link,params: {fid : id}}" append>{{item.text}}</router-link></li>
       </ul>
       <router-view class="myshop"></router-view>
     </div>
@@ -60,6 +60,8 @@ export default {
   name: 'Shop',
   data () {
    return{
+    ajax_flag:false,
+    id:"",
     flag:0,
     tab_li:[
       {text:"点餐",link:"/Shop/Diancan"},
@@ -84,25 +86,42 @@ export default {
     var ulh = h - $(".nav").height() - $(".bottom").height() - $(".manjian").height();
     $(".myshop").css("height",ulh);
 
+    console.log(this.$route.params.fid);
+    this.id = this.$route.params.fid;
     //axios
-    axios.get(`/restapi/shopping/restaurant/1215108?extras[]=activities&extras[]=albums&extras[]=license&extras[]=identification&extras[]=qualification&terminal=h5&latitude=39.90469&longitude=116.407173`)
+    axios.get(`/restapi/shopping/restaurant/${this.$route.params.fid}?extras[]=activities&extras[]=albums&extras[]=license&extras[]=identification&extras[]=qualification&terminal=h5&latitude=39.90469&longitude=116.407173`)
     .then((res)=>{
       console.log(res);
       var h = res.data.image_path;
-      var imgpath = "https://fuss10.elemecdn.com/" + h.slice(0,1) + "/" + h.slice(1,3) + "/" + h.slice(3) + ".png?imageMogr/format/webp/thumbnail/!130x130r/gravity/Center/crop/130x130/";
-      var bgimg = "https://fuss10.elemecdn.com/" + h.slice(0,1) + "/" + h.slice(1,3) + "/" + h.slice(3) + ".png?imageMogr/format/webp/thumbnail/!40p/blur/50x40/&quot;);"
+      var hz = h.slice(32);
+      console.log("hz"+hz);
+      if(hz!=="png"){
+        hz = "jpeg";
+      }
+      // hz.splic("1");
+      console.log("hz"+hz);
+      console.log(h);
+      var imgpath = "https://fuss10.elemecdn.com/" + h.slice(0,1) + "/" + h.slice(1,3) + "/" + h.slice(3) + "."+ hz +"?imageMogr/format/webp/thumbnail/!130x130r/gravity/Center/crop/130x130/";
+      var bgimg = "https://fuss10.elemecdn.com/" + h.slice(0,1) + "/" + h.slice(1,3) + "/" + h.slice(3) + "."+ hz +"?imageMogr/format/webp/thumbnail/!40p/blur/50x40/&quot;);"
       console.log(bgimg);
       console.log(this.img_src);
       this.img_src = imgpath;
+      console.log("logo="+imgpath)
       this.bg_img = bgimg;
-      $(".header_bg").css("background-image","url("+bgimg+")");
+      var str = "url("+bgimg+")"
+      $(".header_bg").css("background-image",str);
       this.axios_data = res.data;
+      this.ajax_flag = true;
     })
   },
   methods: {
     chenge_color (ind) {
       this.flag = ind;
-    }
+    },
+    gotoIndex(){
+    		console.log(this);
+				this.$router.history.push({name: "Index"});
+			}
   } 
 }
 </script>
