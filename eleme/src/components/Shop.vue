@@ -61,9 +61,24 @@ export default {
     var vw = document.documentElement.clientWidth;
     var l = vw - w/2;
     document.getElementsByClassName("shop_info")[0].style.left = l/2 + "px";
-    console.log(vw,w,l);
+    
+    console.log($(window).height());
+    var h = $(window).height();
+    $(".tabs").css("height",h);
+    console.log("可视宽度"+h)
+    var ulh = h - $(".nav").height();
+    console.log("nav"+$(".nav").height())
+    console.log("view"+ulh)
+    $(".myshop").css("height",ulh);
 
-  }
+    var oh = $(".myshop").height();
+    console.log(h,ulh,oh)
+  },
+  methods: {
+    chenge_color (ind) {
+      this.flag = ind;
+    }
+  } 
 }
 </script>
 
@@ -180,6 +195,10 @@ export default {
 
 
 /* 选项卡 */
+.tabs{
+/*  position: fixed;*/
+  overflow: hidden;
+}
 .tabs ul.nav{
   display: flex;
   height: 0.72rem;

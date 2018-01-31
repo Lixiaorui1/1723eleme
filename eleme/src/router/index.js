@@ -39,6 +39,11 @@ export default new Router({
       component: Shop,
       children : [
         {
+          path: '/',
+          name: 'Diancan',
+          component: Diancan
+        },
+        {
           path: '/Diancan',
           name: 'Diancan',
           component: Diancan

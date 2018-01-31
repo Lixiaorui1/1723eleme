@@ -9,7 +9,7 @@
 			<div class="formm">
 				<div class="checked ">
 					<section><input type="text" placeholder="手机号" id="phone" v-model="phone"><button @click="getCode()">获取验证码</button></section>
-					<section><input type="text" name="" placeholder="验证码" id="psw" v-model="psw"></section>
+					<section><input type="text" name="" placeholder="密码" id="psw" v-model="psw"></section>
 					<section class="tishi">温馨提示：未注册饿了么帐号的手机号，登录时将自动注册，且代表您已同意<a href="javascrip:;"><<用户服务协议>></a></section>
 					<mt-button type="primary" size="large" @click="login()">登录</mt-button>
 				</div>
@@ -92,8 +92,8 @@
 				}))
 				.then(function (res) {	
 					alert(res.data.message);
-					let username = that.username;
-					console.log(res);
+					let username = that.phone;
+					console.log(username);
 					if(res.data.code == 1){	
 						console.log(that);
 						//调用vuex中的action
