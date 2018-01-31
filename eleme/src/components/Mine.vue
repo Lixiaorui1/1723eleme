@@ -54,6 +54,7 @@
 				<i>></i>
 			</li>
 		</ul>
+		<BottomNav></BottomNav>
 	</div>
 </template>
 
@@ -155,5 +156,9 @@
 		flex: 1;
 		margin-left: 0.1rem;
 	}
-	
+	.bottom_nav{
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+	}
 </style>

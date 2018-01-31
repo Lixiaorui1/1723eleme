@@ -6,9 +6,9 @@
       <div class="header_bg">
         <i class="iconfont">&#xe61b;</i>
       </div>
-      <img class="shop_logo" src="">
+      <img class="shop_logo" :src='img_src' />
       <div class="shop_info">            
-        <h2>杭州小笼包&nbsp</h2>
+        <h2>{{axios_data.name}}&nbsp</h2>
         <p class="p1">
           <span class="grade">4.3</span><span class="dian">·</span>
           <span class="saled">月售545单</span><span class="dian">·</span>
@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 var rempx = document.documentElement.clientWidth / 6.4;
 document.getElementsByTagName('html')[0].style.fontSize = rempx + "px"; 
 
@@ -63,7 +65,10 @@ export default {
       {text:"点餐",link:"/Shop/Diancan"},
       {text:"评价",link:"/Shop/Pingjia"},
       {text:"商家",link:"/Shop/Shangjia"}
-    ]
+    ],
+    axios_data:{},
+    bg_img:"",
+    img_src:"",
    }
   },
   mounted () {
@@ -73,17 +78,26 @@ export default {
     var l = vw - w/2;
     document.getElementsByClassName("shop_info")[0].style.left = l/2 + "px";
     
-    // console.log($(window).height());
+    //选项卡高度
     var h = $(window).height();
     $(".tabs").css("height",h);
-    // console.log("可视宽度"+h)
     var ulh = h - $(".nav").height() - $(".bottom").height() - $(".manjian").height();
-    // console.log("nav"+$(".nav").height())
-    // console.log("view"+ulh)
     $(".myshop").css("height",ulh);
 
-    // var oh = $(".myshop").height();
-    // console.log(h,ulh,oh)
+    //axios
+    axios.get(`/restapi/shopping/restaurant/1215108?extras[]=activities&extras[]=albums&extras[]=license&extras[]=identification&extras[]=qualification&terminal=h5&latitude=39.90469&longitude=116.407173`)
+    .then((res)=>{
+      console.log(res);
+      var h = res.data.image_path;
+      var imgpath = "https://fuss10.elemecdn.com/" + h.slice(0,1) + "/" + h.slice(1,3) + "/" + h.slice(3) + ".png?imageMogr/format/webp/thumbnail/!130x130r/gravity/Center/crop/130x130/";
+      var bgimg = "https://fuss10.elemecdn.com/" + h.slice(0,1) + "/" + h.slice(1,3) + "/" + h.slice(3) + ".png?imageMogr/format/webp/thumbnail/!40p/blur/50x40/&quot;);"
+      console.log(bgimg);
+      console.log(this.img_src);
+      this.img_src = imgpath;
+      this.bg_img = bgimg;
+      $(".header_bg").css("background-image","url("+bgimg+")");
+      this.axios_data = res.data;
+    })
   },
   methods: {
     chenge_color (ind) {
@@ -140,6 +154,9 @@ export default {
   color: #333;
   margin: 1.04rem 0 0.1rem 0; 
   position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .shop_info h2:after{
   content: "";
@@ -214,6 +231,7 @@ export default {
   display: flex;
   height: 0.72rem;
   line-height: 0.72rem;
+  border-bottom: 2px solid #eee;
 }
 .tabs ul.nav li{
   text-align: center;

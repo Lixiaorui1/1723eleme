@@ -50,6 +50,7 @@
 				<h2 class="more">查看更多 ></h2>
 			</div>
 		</div>
+		<BottomNav></BottomNav>
 	</div>
 	
 </template>
