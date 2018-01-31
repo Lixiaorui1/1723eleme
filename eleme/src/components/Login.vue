@@ -3,24 +3,24 @@
 		<div class="login">
 			<div class="logo"></div>
 			<div class="xuan">
-				<a class="selected">短信登录</a>
-				<a >密码登录</a>
+				<a class="selected">登录</a>
+				<a >注册</a>
 			</div>
 			<div class="formm">
 				<div class="checked ">
-					<section><input type="text" placeholder="手机号" id="phone"><button @click="getCode()">获取验证码</button></section>
-					<section><input type="text" name="" placeholder="验证码"></section>
+					<section><input type="text" placeholder="手机号" id="phone" v-model="phone"><button @click="getCode()">获取验证码</button></section>
+					<section><input type="text" name="" placeholder="验证码" id="psw" v-model="psw"></section>
 					<section class="tishi">温馨提示：未注册饿了么帐号的手机号，登录时将自动注册，且代表您已同意<a href="javascrip:;"><<用户服务协议>></a></section>
-					
+					<mt-button type="primary" size="large" @click="login()">登录</mt-button>
 				</div>
 				<div>
 					<section><input type="text" placeholder="手机/邮箱/用户名" id="username" v-model="username"></section>
 					<section><input type="text" placeholder="密码" id="password" v-model="password"></section>
-					
+					<mt-button type="primary" size="large" @click="register()">注册</mt-button>
 				</div>
 
 			</div>
-			<mt-button type="primary" size="large" @click="login()">登录</mt-button>
+			
 		</div>
 	</div>
 </template>
@@ -35,7 +35,8 @@
 		name:'login',
 		data:function () {
 			return{
-				
+					phone:"",
+					psw:"",
 					username:"",
 					password:"",		
 				
@@ -57,7 +58,7 @@
 				 
 				  });		
 			},
-			login () {
+			register () {
 				var that = this;
 				var instance = axios.create({
 				    headers: {'content-type': 'application/x-www-form-urlencoded'}
@@ -69,6 +70,30 @@
 				.then(function (res) {	
 					alert(res.data.message);
 					let username = that.username;
+					if(res.data.code == 1){	
+						console.log(that);
+						//调用vuex中的action
+						that.$store.dispatch('setUserName',username);
+						//跳转页面
+						that.$router.history.push({name:'Mine'});
+					}
+
+				})
+
+			},
+			login () {
+				var that = this;
+				var instance = axios.create({
+				    headers: {'content-type': 'application/x-www-form-urlencoded'}
+				});
+				instance.post('/api/loginajax',qs.stringify({
+					username:this.phone,
+					password:this.psw
+				}))
+				.then(function (res) {	
+					alert(res.data.message);
+					let username = that.username;
+					console.log(res);
 					if(res.data.code == 1){	
 						console.log(that);
 						//调用vuex中的action
@@ -133,6 +158,7 @@
 		display: inline-block;
 		width: 1rem;
 		height: 0.36rem;
+		text-align: center;
 	}
 	.xuan a:nth-child(1){
 		margin-right: 0.8rem;
@@ -187,5 +213,8 @@
 		z-index: 999;
 		left: 0;
 		top: 0;
+	}
+	.mint-button{
+		margin-top: 0.7rem;
 	}
 </style>
