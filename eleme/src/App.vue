@@ -1,10 +1,18 @@
 <template>
   <div id="app">
+<<<<<<< HEAD
   	<transition name="slide-fade" >
 	  	<keep-alive >
 	    	<router-view class="content"/>
 	    </keep-alive>
     </transition>
+=======
+    
+    	<keep-alive>
+      	<router-view class="content"/>
+      </keep-alive>
+    
+>>>>>>> 2784a7136aa6c58dd3377327916e0b44188e2f0d
   </div>
 </template>
 

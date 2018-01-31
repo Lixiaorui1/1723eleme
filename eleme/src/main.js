@@ -5,10 +5,12 @@ import App from './App'
 import router from './router'
 import BottomNav from './components/BottomNav'
 import Mint from 'mint-ui';
+import touch from 'vue-directive-touch'
 import store from './vuex'//Vuex的配置文件
 import 'mint-ui/lib/style.css'
 
 Vue.use(Mint);
+Vue.use(touch);
 
 Vue.component("BottomNav",BottomNav)
 
