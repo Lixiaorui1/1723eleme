@@ -44,4 +44,30 @@ router.post('/api/userajax',function (req, res, next) {
 });
 
 
+/* 登录 */
+router.post('/api/loginajax', function(req, res, next) {
+	var username = req.body.username;
+	var password = req.body.password;
+	var result = {
+		code: 1,
+		message: "登录成功"
+	};
+	console.log(username,password);
+
+	UserModel.find({username:username,password:md5(password)},function (err,docs) {
+		if(docs.length > 0) {	
+			res.json(result);	
+		}else {
+			result.code = -110;
+			result.message = "用户名或密码错误";
+			res.json(result);
+		}
+		
+
+	});
+	
+
+})
+
+
 module.exports = router;
