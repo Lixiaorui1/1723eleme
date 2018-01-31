@@ -31,7 +31,7 @@
 				<i>推荐商家</i>
 				<div class="rec_border"></div>
 			</div>
-			<div class="restaurants clear" v-for="item in restaurants">
+			<div class="restaurants clear" v-for="item in restaurants" @click="gotoDetail(item.restaurant.id)">
 				<div class="left">
 					<img :src="item.restaurants_img"/>
 				</div>
@@ -67,11 +67,8 @@
 			}
 		},
 		methods: {
-			toTop: function(){
-				alert();
-				var main = document.getElementById("main");
-				var scrollTop = main.pageYOffset || main.scrollTop || main.scrollTop;
-				scrollTop = 0;
+			gotoDetail(id){
+				this.$router.history.push({name: "Shop",params: {fid : id}})
 			}
 		},
 		mounted () {
@@ -119,7 +116,7 @@
 //					console.log(str)
 					arr[i].restaurants_img = "//fuss10.elemecdn.com/" + arr[i].restaurant.image_path.slice(0,1) + "/" + arr[i].restaurant.image_path.slice(1,3) + "/" + arr[i].restaurant.image_path.slice(3) + "." + str + "?imageMogr/format/webp/thumbnail/!130x130r/gravity/Center/crop/130x130/"
 				}
-//				console.log(arr);
+				console.log(arr);
 				this.restaurants = arr;
 			})
 		}

@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <router-view class="content"/>
+    
+    	<keep-alive>
+      	<router-view class="content"/>
+      </keep-alive>
     
   </div>
 </template>
@@ -28,4 +31,5 @@ html,body{height: 100%;}
 	flex: 1 ;
 	overflow-y: scroll;
 }
+
 </style>

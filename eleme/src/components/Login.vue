@@ -1,4 +1,5 @@
 <template>
+	<transition name="component-fade" mode="out-in">
 	<div id="login" v-touch:right ="eventFun">
 		<div class="login">
 			<div class="logo"></div>
@@ -23,6 +24,7 @@
 			
 		</div>
 	</div>
+	</transition>
 </template>
 
 <script>
@@ -106,7 +108,7 @@
 
 			},
 			eventFun () {
-				alert("ceshi")
+				
 				window.history.go(-1);
 
 			}
@@ -222,5 +224,16 @@
 	}
 	.mint-button{
 		margin-top: 0.7rem;
+	}
+	 .component-fade-leave-active {
+	 
+	  transition: transform 1s ease;
+	}
+	.component-fade-leave-to {
+	  transform: translateX(+375px);
+	  
+	}
+	.component-fade-enter,{
+	  transform: translateX(+375px);
 	}
 </style>
