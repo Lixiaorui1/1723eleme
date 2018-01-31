@@ -44,17 +44,17 @@ export default new Router({
           component: Diancan
         },
         {
-          path: '/Diancan',
+          path: 'Diancan',
           name: 'Diancan',
           component: Diancan
         },
         {
-          path: '/Pingjia',
+          path: 'Pingjia',
           name: 'Pingjia',
           component: Pingjia
         },
         {
-          path: '/Shangjia',
+          path: 'Shangjia',
           name: 'Shangjia',
           component: Shangjia
         }

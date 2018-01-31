@@ -35,6 +35,17 @@
       </ul>
       <router-view class="myshop"></router-view>
     </div>
+
+    <!-- 底部 -->
+    
+    <div class="bottom">
+      <div class="car_icon">
+        <i class="iconfont">&#xe61c;</i>
+      </div>
+      <div class="price"></div>
+      <div class="qisong">¥20起送</div>
+      <p class="manjian">满28减17</p>
+    </div>
   </div>
 </template>
 
@@ -49,9 +60,9 @@ export default {
    return{
     flag:0,
     tab_li:[
-      {text:"点餐",link:"/Diancan"},
-      {text:"评价",link:"/Pingjia"},
-      {text:"商家",link:"/Shangjia"}
+      {text:"点餐",link:"/Shop/Diancan"},
+      {text:"评价",link:"/Shop/Pingjia"},
+      {text:"商家",link:"/Shop/Shangjia"}
     ]
    }
   },
@@ -62,17 +73,17 @@ export default {
     var l = vw - w/2;
     document.getElementsByClassName("shop_info")[0].style.left = l/2 + "px";
     
-    console.log($(window).height());
+    // console.log($(window).height());
     var h = $(window).height();
     $(".tabs").css("height",h);
-    console.log("可视宽度"+h)
-    var ulh = h - $(".nav").height();
-    console.log("nav"+$(".nav").height())
-    console.log("view"+ulh)
+    // console.log("可视宽度"+h)
+    var ulh = h - $(".nav").height() - $(".bottom").height() - $(".manjian").height();
+    // console.log("nav"+$(".nav").height())
+    // console.log("view"+ulh)
     $(".myshop").css("height",ulh);
 
-    var oh = $(".myshop").height();
-    console.log(h,ulh,oh)
+    // var oh = $(".myshop").height();
+    // console.log(h,ulh,oh)
   },
   methods: {
     chenge_color (ind) {
@@ -212,6 +223,53 @@ export default {
 }
 .tabs ul.nav li.selected a{
   font-weight: bold;
+  color: #333;
+}
+
+/* 底部 */
+.bottom{
+  height: 0.82rem;
+  position: fixed;
+  bottom: 0;
+  background: #505050;
+  width: 100%;
+}
+.bottom .car_icon{
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  border: 0.08rem solid #444;
+  background: #363636;
+  position: absolute;
+  top: -0.16rem;
+  left: 0.2rem;
+  z-index: 10;
+}
+.bottom .car_icon i{
+  line-height: 0.7rem;
+  font-size: 0.4rem;
+  color: #5f5f63;
+  margin: 0 0.15rem;
+}
+.bottom .qisong{
+  height: 0.82rem;
+  width: 1.8rem;
+  float: right;
+  background: #535356;
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.26rem;
+  line-height: 0.82rem;
+  text-align: center;
+}
+.bottom .manjian{
+  line-height: 0.32rem;
+  position: absolute;
+  top: -0.32rem;
+  background: #fffad7;
+  text-align: center;
+  width: 100%;
+  font-size: 0.24rem;
   color: #333;
 }
 </style>
