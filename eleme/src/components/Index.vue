@@ -69,6 +69,9 @@
 		methods: {
 			toTop: function(){
 				alert();
+				var main = document.getElementById("main");
+				var scrollTop = main.pageYOffset || main.scrollTop || main.scrollTop;
+				scrollTop = 0;
 			}
 		},
 		mounted () {
@@ -77,7 +80,7 @@
 			var toTop = document.getElementsByClassName("toTop")[0];
 			var top_p = document.getElementsByClassName("top_p")[0];
 			main.addEventListener('scroll', function(){
-			var scrollTop = main.pageYOffset || main.scrollTop || main.scrollTop
+			var scrollTop = main.pageYOffset || main.scrollTop || main.scrollTop;
 //				console.log(scrollTop);
 				if(scrollTop > 40){
 					toTop.style.display = "block";
