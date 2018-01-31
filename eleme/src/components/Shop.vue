@@ -79,6 +79,7 @@ export default {
       this.flag = ind;
     },
     gotoIndex(){
+    		console.log(this);
 				this.$router.history.push({name: "Index"});
 			}
   } 
