@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import Index from '@/components/Index'
 import Mine from '@/components/Mine'
 import Login from '@/components/Login'
+import Cart from '@/components/Cart'
 
 import Shop from '@/components/Shop'
 import Diancan from '@/components/Diancan'
@@ -64,6 +65,11 @@ export default new Router({
       path: '/Find',
       name: 'Find',
       component: Find
+    },
+    {
+      path: '/Cart',
+      name: 'Cart',
+      component: Cart
     }
   ]
 })

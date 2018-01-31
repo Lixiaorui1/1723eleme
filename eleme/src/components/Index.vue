@@ -1,7 +1,7 @@
 <template>
 	<div id="box">
-		<div id="top">
-			<p><i><img src="../assets/img/20180128185817.png"/></i>东城区北京市政府</p>
+		<div id="top" class="clear">
+			<p class="top_p"><i><img src="../assets/img/20180128185817.png"/></i>东城区北京市政府</p>
 			<a href="javascript:;"><i><img src="../assets/img/20180128191721.png"/></i>搜索商家、商品名称</a>
 		</div>
 		<div id="main">
@@ -50,6 +50,7 @@
 				顶部
 			</div>
 		</div>
+		<BottomNav></BottomNav>
 	</div>
 </template>
 
@@ -71,21 +72,20 @@
 			}
 		},
 		mounted () {
-			var box = document.getElementById("box");
+			var main = document.getElementById("main");
 			var top = document.getElementById("top");
 			var toTop = document.getElementsByClassName("toTop")[0];
-			box.addEventListener('scroll', function(){
-				var scrollTop = box.pageYOffset || box.scrollTop || box.scrollTop
-				console.log(scrollTop);
+			var top_p = document.getElementsByClassName("top_p")[0];
+			main.addEventListener('scroll', function(){
+			var scrollTop = main.pageYOffset || main.scrollTop || main.scrollTop
+//				console.log(scrollTop);
 				if(scrollTop > 40){
-					top.style.position = "fixed";
-					top.style.top = "-45px";
-					top.style.zIndex = 1;
 					toTop.style.display = "block";
+					top_p.style.display = "none";
+					
 				}else if(scrollTop <= 40){
-					top.style.position = "relative";
-					top.style.top = "0";
 					toTop.style.display = "none";
+					top_p.style.display = "block";
 				}
 			})
 			
@@ -102,9 +102,9 @@
 			
 			axios.get("/restapi/shopping/v3/restaurants?latitude=39.90469&longitude=116.407173&offset=8&limit=8&extras[]=activities&extras[]=tags&extra_filters=home&rank_id=882f228d03d842f8ad8a869790136601&terminal=h5")
 			.then((res)=>{
-				console.log(res)
+//				console.log(res)
 				var arr = res.data.items;
-				console.log(arr);
+//				console.log(arr);
 				var len = arr.length;
 				for(var i = 0;i < len; i ++){
 					var str = "";
@@ -113,10 +113,10 @@
 					}else{
 						str = arr[i].restaurant.image_path.slice(arr[i].restaurant.image_path.indexOf("jpeg"))
 					}
-					console.log(str)
+//					console.log(str)
 					arr[i].restaurants_img = "//fuss10.elemecdn.com/" + arr[i].restaurant.image_path.slice(0,1) + "/" + arr[i].restaurant.image_path.slice(1,3) + "/" + arr[i].restaurant.image_path.slice(3) + "." + str + "?imageMogr/format/webp/thumbnail/!130x130r/gravity/Center/crop/130x130/"
 				}
-				console.log(arr);
+//				console.log(arr);
 				this.restaurants = arr;
 			})
 		}
@@ -124,6 +124,10 @@
 </script>
 
 <style scoped>
+	#box{
+		display: flex;
+		flex-direction: column;
+	}
 	#top{
 		background:  linear-gradient(90deg,#0af,#0085ff);
 		display: flex;
@@ -131,13 +135,15 @@
 		align-items: center;
 		padding-bottom: 0.2rem;
 		width: 100%;
+		padding-top: 0.2rem;
 	}
 	#top p{
 		font-size: 18px;
 		color: #fff;
 		font-weight: 900;
-		line-height: 0.8rem;
+		line-height: 0.5rem;
 		padding-top: 0.2rem;
+		margin-bottom: 0.1rem;
 		width: 95%;
 		border: 0;
 	}
@@ -158,6 +164,8 @@
 	#main{
 		padding: 0 0.14rem;
 		color: #333;
+		flex: 1;
+		overflow-y: auto;
 	}
 	img{width: 100%;}
 	.swiper{
