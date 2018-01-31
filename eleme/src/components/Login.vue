@@ -1,5 +1,5 @@
 <template>
-	<div id="login">
+	<div id="login" @touchmove="TouchM()">
 		<div class="login">
 			<div class="logo"></div>
 			<div class="xuan">
@@ -9,13 +9,13 @@
 			<div class="formm">
 				<div class="checked ">
 					<section><input type="text" placeholder="手机号" id="phone" v-model="phone"><button @click="getCode()">获取验证码</button></section>
-					<section><input type="text" name="" placeholder="密码" id="psw" v-model="psw"></section>
+					<section><input type="password" name="" placeholder="密码" id="psw" v-model="psw"></section>
 					<section class="tishi">温馨提示：未注册饿了么帐号的手机号，登录时将自动注册，且代表您已同意<a href="javascrip:;"><<用户服务协议>></a></section>
 					<mt-button type="primary" size="large" @click="login()">登录</mt-button>
 				</div>
 				<div>
 					<section><input type="text" placeholder="手机/邮箱/用户名" id="username" v-model="username"></section>
-					<section><input type="text" placeholder="密码" id="password" v-model="password"></section>
+					<section><input type="password" placeholder="密码" id="password" v-model="password"></section>
 					<mt-button type="primary" size="large" @click="register()">注册</mt-button>
 				</div>
 
@@ -104,9 +104,13 @@
 
 				})
 
+			},
+			TouchM () {
+				alert("测试");
 			}
 		},
 		mounted () {
+			
 			//选项卡
 			var ans = document.querySelectorAll(".xuan a");
 			var divs = document.querySelectorAll(".formm div");
