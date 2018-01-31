@@ -4,7 +4,7 @@
     <!-- header -->
     <div class="shop_header">
       <div class="header_bg">
-        <i class="iconfont">&#xe61b;</i>
+        <i class="iconfont" @click="gotoIndex()">&#xe61b;</i>
       </div>
       <img class="shop_logo" src="">
       <div class="shop_info">            
@@ -77,7 +77,10 @@ export default {
   methods: {
     chenge_color (ind) {
       this.flag = ind;
-    }
+    },
+    gotoIndex(){
+				this.$router.history.push({name: "Index"});
+			}
   } 
 }
 </script>
