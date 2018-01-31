@@ -1,9 +1,9 @@
 <template>
 	<ul class="bottom_nav">
-    	<router-link to="/"><li><i class="icon iconfont">&#xe60a;</i><p>首页</p></li></router-link>
-	    <router-link to="/Find"><li><i class="icon iconfont">&#xe612;</i><p>发现</p></li></router-link>
-	    <router-link to="/"><li><i class="icon iconfont">&#xe606;</i><p>购物车</p></li></router-link>
-	    <router-link to="/Mine"><li><i class="icon iconfont">&#xe620;</i><p>我的</p></li></router-link>
+    	<router-link to="/"  active-class="click" exact><li><i class="icon iconfont">&#xe60a;</i><p>首页</p></li></router-link>
+	    <router-link to="/Find" active-class="click"><li><i class="icon iconfont">&#xe612;</i><p>发现</p></li></router-link>
+	    <router-link to="/Cart" active-class="click" exact><li><i class="icon iconfont">&#xe606;</i><p>订单</p></li></router-link>
+	    <router-link to="/Mine" active-class="click"><li><i class="icon iconfont">&#xe620;</i><p>我的</p></li></router-link>
     </ul>
 </template>
 
@@ -33,5 +33,8 @@
 	}
 	p{
 		padding-top: 5px;
+	}
+	.click{
+		color: #0089dc;
 	}
 </style>

@@ -1,5 +1,5 @@
 <template>
-	<div id="login" @touchmove="TouchM()">
+	<div id="login" v-touch:right ="eventFun">
 		<div class="login">
 			<div class="logo"></div>
 			<div class="xuan">
@@ -83,10 +83,10 @@
 			},
 			login () {
 				var that = this;
-				var instance = axios.create({
-				    headers: {'content-type': 'application/x-www-form-urlencoded'}
-				});
-				instance.post('/api/loginajax',qs.stringify({
+				// var instance = axios.create({
+				//     headers: {'content-type': 'application/x-www-form-urlencoded'}
+				// });
+				axios.post('/api/loginajax',qs.stringify({
 					username:this.phone,
 					password:this.psw
 				}))
@@ -105,8 +105,10 @@
 				})
 
 			},
-			TouchM () {
-				alert("测试");
+			eventFun () {
+				alert("ceshi")
+				window.history.go(-1);
+
 			}
 		},
 		mounted () {
