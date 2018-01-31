@@ -1,8 +1,11 @@
 <template>
   <div id="app">
-  	<keep-alive>
-    	<router-view class="content"/>
-    </keep-alive>
+  	<transition name="slide-fade" >
+	  	<keep-alive >
+	    	<router-view class="content"/>
+	    </keep-alive>
+    </transition>
+
   </div>
 </template>
 
@@ -29,4 +32,5 @@ html,body{height: 100%;}
 	flex: 1 ;
 	overflow-y: scroll;
 }
+
 </style>

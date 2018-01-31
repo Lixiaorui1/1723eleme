@@ -31,22 +31,26 @@
 				<i>推荐商家</i>
 				<div class="rec_border"></div>
 			</div>
-			<div class="restaurants clear" v-for="item in restaurants" @click="gotoDetail(item.restaurant.id)">
-				<div class="left">
-					<img :src="item.restaurants_img"/>
-				</div>
-				<div class="right">
-					<h2>{{item.restaurant.name}}</h2>
-					<div class="rating">
-						<img src="../assets/img/20180128172902.png"/>
-						{{item.restaurant.rating}}&nbsp;&nbsp;月售{{item.restaurant.recent_order_num}}单
-						<p><i>￥0起送 | 配送费￥9</i><em>2.17km | 40分钟</em></p>
-						<p v-if="item.restaurant.activities"><i>首</i>新用户下单立减17元<em>{{item.restaurant.activities.length}}个活动</em></p>
-						<p v-if="item.restaurant.activities[1]"><i>减</i><em>{{item.restaurant.activities[1].description}}</em></p>
+			<mt-loadmore :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore" >
+				<div>
+					<div class="restaurants clear" v-for="item in restaurants" @click="gotoDetail(item.restaurant.id)">
+						<div class="left">
+							<img :src="item.restaurants_img"/>
+						</div>
+						<div class="right">
+							<h2>{{item.restaurant.name}}</h2>
+							<div class="rating">
+								<img src="../assets/img/20180128172902.png"/>
+								{{item.restaurant.rating}}&nbsp;&nbsp;月售{{item.restaurant.recent_order_num}}单
+								<p><i>￥0起送 | 配送费￥9</i><em>2.17km | 40分钟</em></p>
+								<p v-if="item.restaurant.activities"><i>首</i>新用户下单立减17元<em>{{item.restaurant.activities.length}}个活动</em></p>
+								<p v-if="item.restaurant.activities[1]"><i>减</i><em>{{item.restaurant.activities[1].description}}</em></p>
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="toTop" @click="toTop()">
+			</mt-loadmore>
+			<div class="toTop" @click="toTop">
 				顶部
 			</div>
 		</div>
@@ -63,12 +67,42 @@
 			return {
 				list1: [],
 				list2: [],
-				restaurants: []
+				restaurants: [],
+				allLoaded: false
 			}
 		},
 		methods: {
 			gotoDetail(id){
 				this.$router.history.push({name: "Shop",params: {fid : id}})
+			},
+			loadBottom(){
+				var Num = 0;
+				axios.get(`/restapi/shopping/v3/restaurants?latitude=39.90469&longitude=116.407173&offset=${Num + 8}&limit=8&extras[]=activities&extras[]=tags&extra_filters=home&rank_id=882f228d03d842f8ad8a869790136601&terminal=h5`)
+				.then((res)=>{
+	//				console.log(res)
+					var arr = res.data.items;
+	//				console.log(arr);
+					var len = arr.length;
+					for(var i = 0;i < len; i ++){
+						var str = "";
+						if(arr[i].restaurant.image_path.indexOf("png") != -1){
+							str = arr[i].restaurant.image_path.slice(arr[i].restaurant.image_path.indexOf("png"))
+						}else{
+							str = arr[i].restaurant.image_path.slice(arr[i].restaurant.image_path.indexOf("jpeg"))
+						}
+	//					console.log(str)
+						arr[i].restaurants_img = "//fuss10.elemecdn.com/" + arr[i].restaurant.image_path.slice(0,1) + "/" + arr[i].restaurant.image_path.slice(1,3) + "/" + arr[i].restaurant.image_path.slice(3) + "." + str + "?imageMogr/format/webp/thumbnail/!130x130r/gravity/Center/crop/130x130/"
+					}
+					console.log(arr);
+//					this.restaurants = arr;
+					this.restaurants = this.restaurants.concat(arr);
+//					this.allLoaded = true;// 若数据已全部获取完毕
+  					this.$refs.loadmore.onBottomLoaded();
+				})
+			},
+			toTop () {
+				var main = document.getElementById("main");
+				main.scrollTop = 0;
 			}
 		},
 		mounted () {
@@ -77,10 +111,11 @@
 			var top = document.getElementById("top");
 			var toTop = document.getElementsByClassName("toTop")[0];
 			var top_p = document.getElementsByClassName("top_p")[0];
+			main.scrollTop = 0;
 			main.addEventListener('scroll', function(){
 			var scrollTop = main.pageYOffset || main.scrollTop || main.scrollTop;
 //				console.log(scrollTop);
-				if(scrollTop > 40){
+				if(scrollTop > 180){
 					toTop.style.display = "block";
 					top_p.style.display = "none";
 					
@@ -101,25 +136,7 @@
 				this.list2 = arr.slice(10);
 			})
 			
-			axios.get("/restapi/shopping/v3/restaurants?latitude=39.90469&longitude=116.407173&offset=8&limit=8&extras[]=activities&extras[]=tags&extra_filters=home&rank_id=882f228d03d842f8ad8a869790136601&terminal=h5")
-			.then((res)=>{
-//				console.log(res)
-				var arr = res.data.items;
-//				console.log(arr);
-				var len = arr.length;
-				for(var i = 0;i < len; i ++){
-					var str = "";
-					if(arr[i].restaurant.image_path.indexOf("png") != -1){
-						str = arr[i].restaurant.image_path.slice(arr[i].restaurant.image_path.indexOf("png"))
-					}else{
-						str = arr[i].restaurant.image_path.slice(arr[i].restaurant.image_path.indexOf("jpeg"))
-					}
-//					console.log(str)
-					arr[i].restaurants_img = "//fuss10.elemecdn.com/" + arr[i].restaurant.image_path.slice(0,1) + "/" + arr[i].restaurant.image_path.slice(1,3) + "/" + arr[i].restaurant.image_path.slice(3) + "." + str + "?imageMogr/format/webp/thumbnail/!130x130r/gravity/Center/crop/130x130/"
-				}
-				console.log(arr);
-				this.restaurants = arr;
-			})
+			this.loadBottom();
 		}
 	}
 </script>
