@@ -45,17 +45,17 @@ export default new Router({
           component: () => import('@/components/Diancan')
         },
         {
-          path: '/Diancan',
+          path: 'Diancan',
           name: 'Diancan',
           component: () => import('@/components/Diancan')
         },
         {
-          path: '/Pingjia',
+          path: 'Pingjia',
           name: 'Pingjia',
           component: () => import('@/components/Pingjia')
         },
         {
-          path: '/Shangjia',
+          path: 'Shangjia',
           name: 'Shangjia',
           component: () => import('@/components/Shangjia')
         }

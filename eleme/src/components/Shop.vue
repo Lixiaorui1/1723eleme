@@ -1,14 +1,14 @@
 <template>
-  <div class="shop">
+  <div class="shop" :title="id">
 
     <!-- header -->
     <div class="shop_header">
       <div class="header_bg">
         <i class="iconfont" @click="gotoIndex()">&#xe61b;</i>
       </div>
-      <img class="shop_logo" src="">
+      <img class="shop_logo" :src='img_src' />
       <div class="shop_info">            
-        <h2>杭州小笼包&nbsp</h2>
+        <h2>{{axios_data.name}}&nbsp</h2>
         <p class="p1">
           <span class="grade">4.3</span><span class="dian">·</span>
           <span class="saled">月售545单</span><span class="dian">·</span>
@@ -31,14 +31,27 @@
     <!-- 选项卡 -->
     <div class="tabs">
       <ul class="nav">
-        <li v-for="(item,index) in tab_li" :class="{selected:flag==index}" @click="chenge_color(index)"><router-link :to="item.link" append>{{item.text}}</router-link></li>
+        <li v-for="(item,index) in tab_li" :class="{selected:flag==index}" @click="chenge_color(index)"><router-link v-if="ajax_flag" :to="{path:item.link,params: {fid : id}}" append>{{item.text}}</router-link></li>
       </ul>
       <router-view class="myshop"></router-view>
+    </div>
+
+    <!-- 底部 -->
+    
+    <div class="bottom">
+      <div class="car_icon">
+        <i class="iconfont">&#xe61c;</i>
+      </div>
+      <div class="price"></div>
+      <div class="qisong">¥20起送</div>
+      <p class="manjian">满28减17</p>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 var rempx = document.documentElement.clientWidth / 6.4;
 document.getElementsByTagName('html')[0].style.fontSize = rempx + "px"; 
 
@@ -47,12 +60,17 @@ export default {
   name: 'Shop',
   data () {
    return{
+    ajax_flag:false,
+    id:"",
     flag:0,
     tab_li:[
-      {text:"点餐",link:"/Diancan"},
-      {text:"评价",link:"/Pingjia"},
-      {text:"商家",link:"/Shangjia"}
-    ]
+      {text:"点餐",link:"/Shop/Diancan"},
+      {text:"评价",link:"/Shop/Pingjia"},
+      {text:"商家",link:"/Shop/Shangjia"}
+    ],
+    axios_data:{},
+    bg_img:"",
+    img_src:"",
    }
   },
   mounted () {
@@ -62,17 +80,39 @@ export default {
     var l = vw - w/2;
     document.getElementsByClassName("shop_info")[0].style.left = l/2 + "px";
     
-    console.log($(window).height());
+    //选项卡高度
     var h = $(window).height();
     $(".tabs").css("height",h);
-    console.log("可视宽度"+h)
-    var ulh = h - $(".nav").height();
-    console.log("nav"+$(".nav").height())
-    console.log("view"+ulh)
+    var ulh = h - $(".nav").height() - $(".bottom").height() - $(".manjian").height();
     $(".myshop").css("height",ulh);
 
-    var oh = $(".myshop").height();
-    console.log(h,ulh,oh)
+    console.log(this.$route.params.fid);
+    this.id = this.$route.params.fid;
+    //axios
+    axios.get(`/restapi/shopping/restaurant/${this.$route.params.fid}?extras[]=activities&extras[]=albums&extras[]=license&extras[]=identification&extras[]=qualification&terminal=h5&latitude=39.90469&longitude=116.407173`)
+    .then((res)=>{
+      console.log(res);
+      var h = res.data.image_path;
+      var hz = h.slice(32);
+      console.log("hz"+hz);
+      if(hz!=="png"){
+        hz = "jpeg";
+      }
+      // hz.splic("1");
+      console.log("hz"+hz);
+      console.log(h);
+      var imgpath = "https://fuss10.elemecdn.com/" + h.slice(0,1) + "/" + h.slice(1,3) + "/" + h.slice(3) + "."+ hz +"?imageMogr/format/webp/thumbnail/!130x130r/gravity/Center/crop/130x130/";
+      var bgimg = "https://fuss10.elemecdn.com/" + h.slice(0,1) + "/" + h.slice(1,3) + "/" + h.slice(3) + "."+ hz +"?imageMogr/format/webp/thumbnail/!40p/blur/50x40/&quot;);"
+      console.log(bgimg);
+      console.log(this.img_src);
+      this.img_src = imgpath;
+      console.log("logo="+imgpath)
+      this.bg_img = bgimg;
+      var str = "url("+bgimg+")"
+      $(".header_bg").css("background-image",str);
+      this.axios_data = res.data;
+      this.ajax_flag = true;
+    })
   },
   methods: {
     chenge_color (ind) {
@@ -133,6 +173,9 @@ export default {
   color: #333;
   margin: 1.04rem 0 0.1rem 0; 
   position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .shop_info h2:after{
   content: "";
@@ -207,6 +250,7 @@ export default {
   display: flex;
   height: 0.72rem;
   line-height: 0.72rem;
+  border-bottom: 2px solid #eee;
 }
 .tabs ul.nav li{
   text-align: center;
@@ -216,6 +260,53 @@ export default {
 }
 .tabs ul.nav li.selected a{
   font-weight: bold;
+  color: #333;
+}
+
+/* 底部 */
+.bottom{
+  height: 0.82rem;
+  position: fixed;
+  bottom: 0;
+  background: #505050;
+  width: 100%;
+}
+.bottom .car_icon{
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  border: 0.08rem solid #444;
+  background: #363636;
+  position: absolute;
+  top: -0.16rem;
+  left: 0.2rem;
+  z-index: 10;
+}
+.bottom .car_icon i{
+  line-height: 0.7rem;
+  font-size: 0.4rem;
+  color: #5f5f63;
+  margin: 0 0.15rem;
+}
+.bottom .qisong{
+  height: 0.82rem;
+  width: 1.8rem;
+  float: right;
+  background: #535356;
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.26rem;
+  line-height: 0.82rem;
+  text-align: center;
+}
+.bottom .manjian{
+  line-height: 0.32rem;
+  position: absolute;
+  top: -0.32rem;
+  background: #fffad7;
+  text-align: center;
+  width: 100%;
+  font-size: 0.24rem;
   color: #333;
 }
 </style>

@@ -106,6 +106,7 @@
 			}
 		},
 		mounted () {
+
 			var main = document.getElementById("main");
 			var top = document.getElementById("top");
 			var toTop = document.getElementsByClassName("toTop")[0];
