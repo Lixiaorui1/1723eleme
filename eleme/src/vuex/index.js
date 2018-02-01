@@ -5,6 +5,22 @@ Vue.use(Vuex)
 
 var state = {
 	username:"注册/登录",
+	cart:[
+		{
+			name:"店铺名",
+			shop:[
+				{shopname:"饭名",price:"￥45",num:1},
+				{shopname:"一只鸡",price:"￥90",num:1}
+			]
+		},
+		{
+			name:"兄鸡",
+			shop:[
+				{shopname:"半只鸡",price:"￥45",num:1},
+				{shopname:"一只鸡",price:"￥80",num:1}
+			]
+		}
+	],
 }
 
 // 持久化：从本地取出数据
@@ -23,12 +39,20 @@ const mutations = {
 	setUserName: function (state, username) {
 		state.username = username;
 		saveTolocal(state);
+	},
+	addToCart: function(state, goods_info) {
+		state.cart.push(goods_info);
+		// 持久化：保存数据
+		saveTolocal(state);
 	}
 }
 
 const actions = {
 	setUserName: function ({commit}, username) {
 		commit("setUserName",username)
+	},
+	addToCart: function({commit}, goods_info) {
+		commit("addToCart", goods_info);
 	}
 }
 

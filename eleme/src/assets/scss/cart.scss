@@ -35,6 +35,60 @@ img{width: 100%;}
                 color: #888;
             }
         }
+        .mainList{
+            ul{
+            
+                li{
+                   padding-top:0.2rem;
+                   padding-bottom:0.2rem;
+                   margin-top:0.2rem; 
+                   background:#fff;
+                   input{
+                        float:left;
+                        margin-left:0.1rem;
+                        margin-top:0.05rem;
+                    }
+                   h4{
+                        float:left;
+                        font-size:16px;
+                        margin-left:0.1rem;
+                        margin-right:0.1rem;
+                    }
+                   h3{
+                        height:0.6rem;
+                        border-bottom:1px solid #999;
+                    }
+                    div{
+                        margin-top:0.2rem;
+                        p{
+                            font-size:14px;
+                            margin-left:0.1rem;
+                            margin-bottom:0.2rem;
+                            input{
+                                margin-top:0.35rem;
+                                margin-right:0.2rem;
+                            }
+                            img{
+                                width:1rem;
+                                height:1rem;
+                                float:left;
+                                margin-right:0.3rem;
+                            }
+                            b{
+                                display:block;
+                                margin-bottom:0.3rem;
+
+                            }
+                            span{
+                               margin-right:0.5rem;
+                               color:#f60;
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
