@@ -35,31 +35,9 @@ export default new Router({
       component: () => import('@/components/Login')
     },
     {
-      path: '/Shop',
+      path: '/Shop/:fid',
       name: 'Shop',
       component: () => import('@/components/Shop'),
-      children : [
-        {
-          path: '/',
-          name: 'Diancan',
-          component: () => import('@/components/Diancan')
-        },
-        {
-          path: 'Diancan',
-          name: 'Diancan',
-          component: () => import('@/components/Diancan')
-        },
-        {
-          path: 'Pingjia',
-          name: 'Pingjia',
-          component: () => import('@/components/Pingjia')
-        },
-        {
-          path: 'Shangjia',
-          name: 'Shangjia',
-          component: () => import('@/components/Shangjia')
-        }
-      ]
     },
     {
       path: '/Find',

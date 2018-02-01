@@ -5,22 +5,7 @@ Vue.use(Vuex)
 
 var state = {
 	username:"注册/登录",
-	cart:[
-		{
-			name:"店铺名",
-			shop:[
-				{shopname:"饭名",price:"￥45",num:1},
-				{shopname:"一只鸡",price:"￥90",num:1}
-			]
-		},
-		{
-			name:"兄鸡",
-			shop:[
-				{shopname:"半只鸡",price:"￥45",num:1},
-				{shopname:"一只鸡",price:"￥80",num:1}
-			]
-		}
-	],
+	cart:[],
 }
 
 // 持久化：从本地取出数据
@@ -51,9 +36,11 @@ const actions = {
 	setUserName: function ({commit}, username) {
 		commit("setUserName",username)
 	},
+
 	addToCart: function({commit}, goods_info) {
 		commit("addToCart", goods_info);
 	}
+
 }
 
 export default new Vuex.Store({
