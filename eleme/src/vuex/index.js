@@ -29,7 +29,7 @@ const mutations = {
 const actions = {
 	setUserName: function ({commit}, username) {
 		commit("setUserName",username)
-	}
+	},
 }
 
 export default new Vuex.Store({

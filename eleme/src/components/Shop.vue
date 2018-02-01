@@ -1,127 +1,201 @@
 <template>
-  <div class="shop" :title="id">
-
+  <div id="shop">
     <!-- header -->
     <div class="shop_header">
       <div class="header_bg">
         <i class="iconfont" @click="gotoIndex()">&#xe61b;</i>
+        <img class="shop_logo" :src="restaurant.restaurants_img" v-if="restaurant"/>
       </div>
-      <img class="shop_logo" :src='img_src' />
       <div class="shop_info">            
-        <h2>{{axios_data.name}}&nbsp</h2>
-        <p class="p1">
-          <span class="grade">4.3</span><span class="dian">·</span>
-          <span class="saled">月售545单</span><span class="dian">·</span>
-          <span class="fengniao">蜂鸟专送</span><span class="dian">·</span>
-          <span class="min">约32分钟</span><span class="dian">·</span>
-          <span class="distance">距离2.9km</span>
+       	<h2 v-if="restaurant">{{restaurant.name}}</h2>
+        <p>
+          <span v-if="restaurant">{{restaurant.rating}}</span>&nbsp;&nbsp;
+          <span v-if="restaurant">月售{{restaurant.recent_order_num}}单</span>&nbsp;&nbsp;
+          <span>约32分钟</span>&nbsp;&nbsp;
+          <span>距离2.9km</span>
         </p>
-        <p class="describe">本店主营江南小吃</p>
-        <div class="youhui">
-          <div class="left">
-<div class="first_order">首单</div>
-            <p>新用户下单立减17元（不与其他活动同享）</p>
-          </div>
-          <p class="right">5个优惠</p>
-        </div>
-        <!-- <p class="hongbao"><i class="iconfont">&#xe6b4;</i><span>8</span>元无门槛红包<span>领取</span></p> -->
+        <p v-if="restaurant">{{restaurant.promotion_info}}</p>
+        <p v-if="restaurant"><i> 活动 </i>{{restaurant.activities[0].description}}</p>
       </div>
     </div>
 
     <!-- 选项卡 -->
     <div class="tabs">
       <ul class="nav">
-        <li v-for="(item,index) in tab_li" :class="{selected:flag==index}" @click="chenge_color(index)"><router-link v-if="ajax_flag" :to="{path:item.link,params: {fid : id}}" append>{{item.text}}</router-link></li>
+        <li @click="toDianCan()">点餐</li>
+        <li @click="toPingJia()">评价</li>
+       	<li @click="toShangJia()">商家</li>
       </ul>
-      <router-view class="myshop"></router-view>
     </div>
-
-    <!-- 底部 -->
-    
-    <div class="bottom">
-      <div class="car_icon">
-        <i class="iconfont">&#xe61c;</i>
+    <div class="myshop">
+    	<div class="diancan" v-if="flag1">
+    		<ul class="left" >
+    			<li v-if="foods" v-for="item in foods">{{item.name}}</li>
+    		</ul>
+    		<div class="right">
+    			<div class="foods_list" v-for="item in foods">
+    					<div class="foods_list clear" v-for="it in item.foods">
+	    					<img :src="it.foods_img"/>
+	    					<div class="discription">
+	    						<h2>{{it.name}}</h2>
+	    						<p>{{it.description}}</p>
+	    						<p>月售{{it.month_sales}}&nbsp;&nbsp;好评率{{it.satisfy_rate}}%</p>
+	    						<p>￥{{it.specfoods[0].price}}<i @click="goToCart(it)">+</i></p>
+	    					</div>
+	    				</div>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="pingjia" v-if="flag2">
+    		<ul v-for="item in rating">
+    			<li v-for="item in rating">
+    				<p>{{item.username}}<i>{{item.rated_at}}</i></p>
+    				<p>{{item.rating_text}}</p>
+    				<img :src="item.foods_img" />
+    			</li>
+    		</ul>
+    	</div>
+    	<div class="shangjia" v-if="flag3">
+    		
+    	</div>
+	  </div>
+	  <div class="bottom">
+      <i class="iconfont">&#xe61c;</i>
+      <div class="price">
+      	<i>￥0</i>
+      	<p>配送费14</p>
       </div>
-      <div class="price"></div>
       <div class="qisong">¥20起送</div>
-      <p class="manjian">满28减17</p>
-    </div>
-  </div>
+   </div>
+	</div>
 </template>
 
+<script src="../assets/js/jquery-1.11.3.js"></script>
 <script>
 import axios from 'axios';
-
-var rempx = document.documentElement.clientWidth / 6.4;
-document.getElementsByTagName('html')[0].style.fontSize = rempx + "px"; 
-
 
 export default {
   name: 'Shop',
   data () {
    return{
-    ajax_flag:false,
-    id:"",
-    flag:0,
-    tab_li:[
-      {text:"点餐",link:"/Shop/Diancan"},
-      {text:"评价",link:"/Shop/Pingjia"},
-      {text:"商家",link:"/Shop/Shangjia"}
-    ],
-    axios_data:{},
-    bg_img:"",
-    img_src:"",
+   	restaurant: null,
+   	foods: null,
+   	cart: [],
+   	rating: {},
+   	num: 0,
+   	flag1: true,
+   	flag2: false,
+   	flag3: false
    }
   },
   mounted () {
-    // 使scale 0.5的div居中
-    var w = document.getElementsByClassName("shop_info")[0].offsetWidth;
-    var vw = document.documentElement.clientWidth;
-    var l = vw - w/2;
-    document.getElementsByClassName("shop_info")[0].style.left = l/2 + "px";
-    
-    //选项卡高度
-    var h = $(window).height();
-    $(".tabs").css("height",h);
-    var ulh = h - $(".nav").height() - $(".bottom").height() - $(".manjian").height();
-    $(".myshop").css("height",ulh);
-
-    console.log(this.$route.params.fid);
-    this.id = this.$route.params.fid;
+  	var height = $("body").height() - $(".tabs").height();
+  	$(".myshop").css("height",height);
+  	
+  	//选项卡
+  	$(".nav li").click(function(){
+  		$(".nav li").css("border-bottom","0")
+  		$(this).css("border-bottom","2px solid #0085FF")
+  	})
     //axios
-    axios.get(`/restapi/shopping/restaurant/${this.$route.params.fid}?extras[]=activities&extras[]=albums&extras[]=license&extras[]=identification&extras[]=qualification&terminal=h5&latitude=39.90469&longitude=116.407173`)
-    .then((res)=>{
-      console.log(res);
-      var h = res.data.image_path;
-      var hz = h.slice(32);
-      console.log("hz"+hz);
-      if(hz!=="png"){
-        hz = "jpeg";
-      }
-      // hz.splic("1");
-      console.log("hz"+hz);
-      console.log(h);
-      var imgpath = "https://fuss10.elemecdn.com/" + h.slice(0,1) + "/" + h.slice(1,3) + "/" + h.slice(3) + "."+ hz +"?imageMogr/format/webp/thumbnail/!130x130r/gravity/Center/crop/130x130/";
-      var bgimg = "https://fuss10.elemecdn.com/" + h.slice(0,1) + "/" + h.slice(1,3) + "/" + h.slice(3) + "."+ hz +"?imageMogr/format/webp/thumbnail/!40p/blur/50x40/&quot;);"
-      console.log(bgimg);
-      console.log(this.img_src);
-      this.img_src = imgpath;
-      console.log("logo="+imgpath)
-      this.bg_img = bgimg;
-      var str = "url("+bgimg+")"
-      $(".header_bg").css("background-image",str);
-      this.axios_data = res.data;
-      this.ajax_flag = true;
-    })
+    var id = this.$route.params.fid;
+    var that = this;
+//  console.log(id);
+		axios.get(`restapi/shopping/restaurant/${id}?extras[]=activities&extras[]=albums&extras[]=license&extras[]=identification&extras[]=qualification&terminal=h5&latitude=39.90469&longitude=116.407173`)
+		.then((res)=>{
+//			console.log(res)
+			that.restaurant = res.data;
+//			console.log(that.restaurant);
+			var str = "";
+			if(that.restaurant.image_path.indexOf("png") != -1){
+				str = that.restaurant.image_path.slice(that.restaurant.image_path.indexOf("png"))
+			}else{
+				str = that.restaurant.image_path.slice(that.restaurant.image_path.indexOf("jpeg"))
+			}
+//			console.log(str)
+			that.restaurant.restaurants_img = "//fuss10.elemecdn.com/" + that.restaurant.image_path.slice(0,1) + "/" + that.restaurant.image_path.slice(1,3) + "/" + that.restaurant.image_path.slice(3) + "." + str + "?imageMogr/format/webp/thumbnail/!130x130r/gravity/Center/crop/130x130/";
+		})
+		
+		//获取食物列表
+		axios.get(`/restapi/shopping/v2/menu?restaurant_id=${id}`)
+		.then((res)=>{
+			var arr = res.data;
+//			console.log(arr);
+			var len = arr.length;
+			for(var i = 0;i < len; i ++){
+				var foods = arr[i].foods;
+				var len2 = foods.length;
+//				console.log(foods);
+				for(var j = 0;j < len2;j ++){
+					var str = "";
+					if(foods[j].image_path.indexOf("png") != -1){
+						str = foods[j].image_path.slice(foods[j].image_path.indexOf("png"))
+					}else{
+						str = foods[j].image_path.slice(foods[j].image_path.indexOf("jpeg"))
+					}
+					foods[j].foods_img = "//fuss10.elemecdn.com/" + foods[j].image_path.slice(0,1) + "/" + foods[j].image_path.slice(1,3) + "/" + foods[j].image_path.slice(3) + "." + str + "?imageMogr/format/webp/thumbnail/!140x140r/gravity/Center/crop/140x140/"
+				}
+			}
+//			console.log(arr);
+			this.foods = arr;
+		})
+		
+		//获取评价列表
+		axios.get(`/restapi/ugc/v3/restaurants/${id}/ratings?has_content=true&offset=0&limit=8`)
+		.then((res)=>{
+			var arr = res.data;
+//			console.log(arr);
+			var len = arr.length;
+			for(var i = 0;i < len; i ++){
+				var order_images = arr[i].order_images;
+				var len2 = order_images.length;
+				for(var j = 0;j < len2;j ++){
+					var str = "";
+					if(order_images[j].image_hash.indexOf("png") != -1){
+						str = order_images[j].image_hash.slice(order_images[j].image_hash.indexOf("png"))
+					}else{
+						str = order_images[j].image_hash.slice(order_images[j].image_hash.indexOf("jpeg"))
+					}
+					arr[i].foods_img = "//fuss10.elemecdn.com/" + order_images[j].image_hash.slice(0,1) + "/" + order_images[j].image_hash.slice(1,3) + "/" + order_images[j].image_hash.slice(3) + "." + str + "?imageMogr/format/webp/thumbnail/!140x140r/gravity/Center/crop/140x140/"
+				}
+			}
+//			console.log(arr);
+			this.rating = arr;
+		})
   },
   methods: {
-    chenge_color (ind) {
-      this.flag = ind;
-    },
+  	toDianCan(){
+  		this.flag1 = true;
+  		this.flag2 = false;
+  		this.flag3 = false;
+  	},
+  	toPingJia(){
+  		this.flag1 = false;
+  		this.flag2 = true;
+  		this.flag3 = false;
+  	},
+  	toShangJia(){
+  		this.flag1 = false;
+  		this.flag2 = false;
+  		this.flag3 = true;
+  	},
     gotoIndex(){
-    		console.log(this);
+//  		console.log(this);
 				this.$router.history.push({name: "Index"});
-			}
+			},
+		goToCart(it){
+//			console.log(it);
+			var resname = $(".shop_info").find("h2").html();
+			var foodname = it.name;
+			var fprice = it.specfoods[0].price;
+			this.num ++;
+//			console.log(name,shopname,price,this.num);
+			
+			this.cart.push({name: resname,shop: [{shopname: foodname,price: fprice,num: this.num}]})
+			console.log(this.cart);
+			//调用vuex中的action
+			this.$store.dispatch('addToCart',this.cart);
+		}
   } 
 }
 </script>
@@ -129,184 +203,219 @@ export default {
 <style scoped>
 @import '../assets/iconfont_shop/iconfont.css';
 
-.shop_header{
-  position: relative;
-  min-height: 3.6rem;
+#shop{
+	/*display: flex;*/
+	flex-direction: column;
+	height: 100%;
+	overflow: scroll;
 }
 .header_bg{
-  height: 1.16rem;
-  background: red;
+	position: relative;
+	padding-top: 0.2rem;
+	height: 100%;
+	background: url("https://fuss10.elemecdn.com/5/b1/5b6b0942f5100eac25bb07992131apng.png?imageMogr/format/webp/thumbnail/!40p/blur/50x40/");
+	height: 1.36rem;
 }
 .header_bg i{
-  font-size: 0.50rem;
-  margin-left: 0.16rem;
-  color: #fff;
+	color: #fff !important;
+	font-size: 30px;
+	margin-left: 0.2rem;
 }
-.shop_logo{
-  width: 1.14rem;
-  height: 1.14rem;
-  border-radius: 4px;
-  background: yellow;
-  border: none;
-  position: absolute;
-  top: 0.44rem;
-  left: 0;
-  right: 0;
-  margin: auto;
+.header_bg img{
+	width: 1.3rem;
+	position: absolute;
+	top: 0.6rem;
+	left: 40%;
 }
 .shop_info{
-  padding: 0 0.28rem;
-  font-size: 0.36rem;
-  position: absolute;
-  box-sizing: border-box;
-/*  left: 25%;*/
-    /*浏览器默认最小字体解决*/
-  -webkit-transform: scale(.5);
-  transform: scale(.5);
-  -webkit-transform-origin: 0 0;
-  transform-origin: 0 0;
+	margin-top: 0.5rem;
+	text-align: center;
+	color: #333;
+	font-size: 12px;
 }
 .shop_info h2{
-  text-align: center;
-  font-size: 0.72rem;
-  font-weight: bold;
-  color: #333;
-  margin: 1.04rem 0 0.1rem 0; 
-  position: relative;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.shop_info h2:after{
-  content: "";
-  border: 0.2rem solid transparent;
-  border-left-color: #545454;
-  position: absolute;
-  top: 0.32rem;
-}
-.shop_info .p1{
-  color: #333;
-  margin-bottom: 0.2rem;
-}
-.shop_info .p1 .dian{
-  margin-left: 4px;
-  color: #d8d8d8;
-}
-.shop_info .describe{
-  color: #999;
-  margin-bottom: 0.32rem;
+	font-size: 20px;
+	font-weight: 900;
 }
 .shop_info p{
-  text-align: center;
+	line-height: 2em;
+	color: #333;
+	padding: 0 0.1rem;
 }
-.youhui{
-  width: 11.2rem;
-  height: 0.76rem;
-  line-height: 0.76rem;
-  margin: 0 auto;
-  border: 1px solid #f2f2f2;
-  display: flex;
-  justify-content: space-between;
-  color: #796666;
-  position: relative;
-  margin-right: 0.4rem;
-  box-sizing: border-box;
+.shop_info p:nth-of-type(2){
+	color: #999;
+	width: 80%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: inline-block;
 }
-.youhui .left{
-  display: flex;
-  align-items: center;
+.shop_info p:nth-of-type(3){
+	color: #666;
+	margin-bottom: 0.2rem;
 }
-.youhui .left .first_order{
-  height: 0.44rem;
-  width: 0.92rem;
-  background: #70bc46;
-  color: #fff;
-  font-size: 0.28rem !important;
-  text-align: center;
-  line-height: 0.44rem;
-  margin: 0 0.2rem 0 0.28rem;
+.shop_info p:nth-of-type(3) i{
+	display: inline-block;
+	background: rgb(240, 115, 115);
+	width: 0.6rem;
+	margin-right: 0.05rem;
+	text-align: center;
+	border-radius: 0.07rem;
+	line-height: 1.5em;
+	color: #fff;
 }
-.youhui .right{
-  padding-right: 0.2rem;
-  right: 0.3rem;
-  position: absolute;
+.diancan{
+	display: flex;
 }
-.youhui .right:after{
-  content: "";
-  border: 0.12rem solid transparent;
-  border-top-color: #796666;
-  position: absolute;
-  top: 0.32rem;
-/*  right: 0.2rem;*/
+.left{
+	background: #f8f8f8;
 }
-
-
-/* 选项卡 */
-.tabs{
-/*  position: fixed;*/
-  overflow: hidden;
+.left li{
+	width: 1.24rem;
+	height: 0.56rem;
+	padding: 0.35rem 0.15rem;
+	line-height: 1.5em;
+	border-bottom: 1px solid #e8e8e8;
+	color: #666;
 }
-.tabs ul.nav{
-  display: flex;
-  height: 0.72rem;
-  line-height: 0.72rem;
-  border-bottom: 2px solid #eee;
+.right{
+	flex: 1;
 }
-.tabs ul.nav li{
-  text-align: center;
-  flex: 1;
-  font-size: 0.24rem;
-  color: #666;
+.foods_list{
+	margin: 0.15rem 0 0.3rem 0.05rem;
 }
-.tabs ul.nav li.selected a{
-  font-weight: bold;
-  color: #333;
+.foods_list img{
+	width: 1.3rem;
+	float: left;
 }
-
-/* 底部 */
+.discription{
+	float: left;
+	width: 3rem;
+	margin-left: 0.1rem;
+	color: #333;
+}
+.discription h2{
+	font-size: 16px;
+	font-weight: 900;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.discription p{
+	line-height: 1.5em;
+}
+.discription p:nth-of-type(1){
+	color: #999999;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.discription p:nth-of-type(3){
+	color: #f60;
+}
+.discription p:nth-of-type(3) i{
+	float: right;
+	width: 0.4rem;
+	border-radius: 50%;
+	background: #2395ff;
+	color: #fff;
+	text-align: center;
+	font-weight: 900;
+}
+.nav{
+	display: flex;
+	justify-content: space-around;
+	height: 0.81rem;
+	line-height: 0.81rem;
+	border-bottom: 2px solid #ddd;
+}
+.nav li{
+	flex: 1;
+	text-align: center;
+}
+.click{
+	border-bottom: 2px solid #2395ff;
+	font-weight: 900;
+	color: #000000;
+}
+.myshop{
+	height: 10rem;
+	overflow-y: auto;
+}
 .bottom{
-  height: 0.82rem;
-  position: fixed;
-  bottom: 0;
-  background: #505050;
-  width: 100%;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	height: 0.96rem;
+	background: rgba(61,61,63,.9);
+	color: #fff;
 }
-.bottom .car_icon{
-  width: 0.7rem;
-  height: 0.7rem;
-  border-radius: 50%;
-  border: 0.08rem solid #444;
-  background: #363636;
-  position: absolute;
-  top: -0.16rem;
-  left: 0.2rem;
-  z-index: 10;
+.bottom > i{
+	position: absolute;
+	left: 0.2rem;
+	top: -0.2rem;
+	background: #333;
+	width: 1rem;
+	height: 1rem;
+	border-radius: 50%;
+	text-align: center;
+	color: #666;
+	line-height: 0.9rem;
+	font-size: 30px !important;
+	border: 5px solid #444;
+	box-sizing: border-box;
 }
-.bottom .car_icon i{
-  line-height: 0.7rem;
-  font-size: 0.4rem;
-  color: #5f5f63;
-  margin: 0 0.15rem;
+.price{
+	float: left;
+	margin: 0.04rem 0 0 1.5rem;
 }
-.bottom .qisong{
-  height: 0.82rem;
-  width: 1.8rem;
-  float: right;
-  background: #535356;
-  color: #fff;
-  font-weight: bold;
-  font-size: 0.26rem;
-  line-height: 0.82rem;
-  text-align: center;
+.price i{
+	font-size: 20px;
 }
-.bottom .manjian{
-  line-height: 0.32rem;
-  position: absolute;
-  top: -0.32rem;
-  background: #fffad7;
-  text-align: center;
-  width: 100%;
-  font-size: 0.24rem;
-  color: #333;
+.price p{
+	font-size: 12px;
+	color: #999;
+}
+.qisong{
+	float: right;
+	margin-right: 0.3rem;
+	line-height: 0.96rem;
+	font-size: 16px;
+}
+.pingjia{
+	padding: 0 0.15rem ;
+}
+.pingjia ul li{
+	border-bottom: 1px solid #eee;
+	color: #333;
+}
+.pingjia ul li p{
+	line-height: 3em;
+}
+.pingjia ul li p:nth-of-type(1){
+	font-size: 16px;
+	font-weight: 900;
+}
+.pingjia ul li p:nth-of-type(1) i{
+	color: #999999;
+	font-size: 12px;
+	font-weight: 100;
+	margin-left: 0.2rem;
+}
+.pingjia ul li p:nth-of-type(2){
+	font-size: 14px;
+	padding-left: 1rem;
+}
+.pingjia ul li img{
+	margin-bottom: 0.5rem;
+	margin-left: 1rem;
+}
+.pandect{
+	padding: 0.2rem 0;
+	height: 1rem;
+}
+.shangjia{
+	background: #eee;
+	padding: 0 0.15rem;
 }
 </style>
